@@ -8,7 +8,7 @@ const enviarEmailInterno = async (datosFormulario) => {
   try {
     const { data, error } = await resend.emails.send({
       from: 'Estancia Las Aves <contacto@estancialasaves.com>',
-      to: ['contacto@estancialasaves.com', 'alan_jhosel@hotmail.com'],
+      to: ['contacto@estancialasaves.com', 'alan_jhosel@hotmail.com', "melisa_more@hotmail.com"],
       replyTo: datosFormulario.email,
       subject: `Nuevo mensaje - ${datosFormulario.servicio} - ${datosFormulario.nombre}`,
       html: `
