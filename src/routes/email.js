@@ -1,7 +1,6 @@
 // routes/email.js
 const express = require('express');
 const { informarRequerimientoInformacion  } = require('../controllers/emailController');
-const { testEmail } = require('../config/nodemailer'); // 👈 Importa la función de prueba
 
 const router = express.Router();
 
