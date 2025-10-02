@@ -1,6 +1,5 @@
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios'); // Necesitas instalar: npm install axios
 require('dotenv').config();
 
 // Importar rutas
@@ -16,34 +15,16 @@ app.use(express.json());
 // Rutas
 app.use('/api/email', emailRoutes);
 
-// Ruta de prueba
+// Ruta de salud para monitoreo
 app.get('/api/health', (req, res) => {
-  res.status(200).json({ message: 'API funcionando', timestamp: new Date().toISOString() });
+  res.status(200).json({
+    status: 'ok',
+    message: 'API funcionando',
+    timestamp: new Date().toISOString()
+  });
 });
 
-// Función para auto-ping
-const autoPing = () => {
-  const url = `http://localhost:${PORT}/api/health`;
-  
-  axios.get(url)
-    .then(response => {
-      console.log(`✅ Ping exitoso: ${new Date().toLocaleString()}`);
-    })
-    .catch(error => {
-      console.error(`❌ Error en ping: ${error.message}`);
-    });
-};
-
-// Iniciar auto-ping cada 30 segundos (solo en producción)
-if (process.env.NODE_ENV === 'production') {
-  console.log('🔄 Iniciando auto-ping cada 30 segundos...');
-  setInterval(autoPing, 30000); // 30 segundos
-  
-  // Primer ping inmediato
-  setTimeout(autoPing, 5000);
-}
-
-// Ruta por defecto para manejar errores
+// Ruta por defecto para manejar errores 404
 app.use((req, res, next) => {
   res.status(404).json({ message: 'Ruta no encontrada' });
 });
