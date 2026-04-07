@@ -19,7 +19,7 @@ const enviarTelegram = async (data) => {
 👤 <b>Nombre:</b> ${escapar(nombre)}
 📧 <b>Email:</b> ${escapar(email)}
 📱 <b>Tel:</b> ${escapar(telefono || "No proporcionado")}
-🛠 <b>Servicio:</b> ${escapar(servicio)}
+🏡 <b>Servicio:</b> ${escapar(servicio)}
 💬 <b>Mensaje:</b> ${escapar(mensaje || "Sin mensaje")}
 🕒 <b>Fecha:</b> ${fechaMX}
 `;
