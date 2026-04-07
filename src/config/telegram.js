@@ -1,6 +1,5 @@
 const axios = require("axios");
 
-// ✅ AQUÍ va la función
 const escapar = (text = "") =>
   text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
@@ -8,7 +7,12 @@ const enviarTelegram = async (data) => {
   try {
     const { nombre, email, telefono, servicio, mensaje } = data;
 
-    // ✅ Usar escapar en TODOS los datos del usuario
+    const fechaMX = new Date().toLocaleString("es-MX", {
+      timeZone: "America/Mazatlan",
+      dateStyle: "medium",
+      timeStyle: "short",
+    });
+
     const texto = `
 📩 <b>Nuevo contacto web</b>
 
@@ -17,7 +21,7 @@ const enviarTelegram = async (data) => {
 📱 <b>Tel:</b> ${escapar(telefono || "No proporcionado")}
 🛠 <b>Servicio:</b> ${escapar(servicio)}
 💬 <b>Mensaje:</b> ${escapar(mensaje || "Sin mensaje")}
-🕒 <b>Fecha:</b> ${new Date().toLocaleString()}
+🕒 <b>Fecha:</b> ${fechaMX}
 `;
 
     const url = `https://api.telegram.org/bot${process.env.TELEGRAM_TOKEN}/sendMessage`;
