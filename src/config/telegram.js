@@ -93,7 +93,7 @@ Tel: ${telefono || "No proporcionado"}
           ],
           [
             {
-              text: "📤 Reenviar info",
+              text: "📤 Reenviar a Má",
               url: `https://wa.me/${numeroDestino}?text=${mensajeCodificado}`,
             },
           ],
