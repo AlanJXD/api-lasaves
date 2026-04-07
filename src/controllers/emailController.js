@@ -1,4 +1,8 @@
-const { enviarEmailInterno, enviarConfirmacionUsuario } = require("../config/resend");
+const {
+  enviarEmailInterno,
+  enviarConfirmacionUsuario,
+} = require("../config/resend");
+const { enviarTelegram } = require("../config/telegram");
 
 // Función para formatear número de WhatsApp
 const formatearNumeroWhatsApp = (telefono, nombre, servicio, mensaje) => {
@@ -71,6 +75,22 @@ const informarRequerimientoInformacion = async (req, res) => {
       mensajeFinal
     );
 
+    console.log("📲 Enviando notificación a Telegram...");
+
+    const resultadoTelegram = await enviarTelegram({
+      nombre: nombreFinal,
+      email: emailFinal,
+      telefono: telefonoFinal,
+      servicio: servicioFinal,
+      mensaje: mensajeFinal,
+    });
+
+    if (!resultadoTelegram.success) {
+      console.warn("⚠️ Error enviando Telegram:", resultadoTelegram.error);
+    } else {
+      console.log("✅ Telegram enviado");
+    }
+
     console.log("📧 Enviando correo interno...");
     const resultadoInterno = await enviarEmailInterno({
       servicio: servicioFinal,
@@ -78,11 +98,14 @@ const informarRequerimientoInformacion = async (req, res) => {
       email: emailFinal,
       telefono: telefonoFinal,
       mensaje: mensajeFinal,
-      whatsappData: whatsappData
+      whatsappData: whatsappData,
     });
 
     if (!resultadoInterno.success) {
-      console.error("❌ Error enviando correo interno:", resultadoInterno.error);
+      console.error(
+        "❌ Error enviando correo interno:",
+        resultadoInterno.error
+      );
     } else {
       console.log("✅ Correo interno enviado:", resultadoInterno.messageId);
     }
@@ -91,13 +114,19 @@ const informarRequerimientoInformacion = async (req, res) => {
     const resultadoUsuario = await enviarConfirmacionUsuario({
       nombre: nombreFinal,
       email: emailFinal,
-      servicio: servicioFinal
+      servicio: servicioFinal,
     });
 
     if (!resultadoUsuario.success) {
-      console.warn("⚠️ No se pudo enviar confirmación al usuario:", resultadoUsuario.error);
+      console.warn(
+        "⚠️ No se pudo enviar confirmación al usuario:",
+        resultadoUsuario.error
+      );
     } else {
-      console.log("✅ Confirmación enviada al usuario:", resultadoUsuario.messageId);
+      console.log(
+        "✅ Confirmación enviada al usuario:",
+        resultadoUsuario.messageId
+      );
     }
 
     res.status(200).json({
@@ -105,9 +134,9 @@ const informarRequerimientoInformacion = async (req, res) => {
       message: "Solicitud recibida correctamente. Te contactaremos pronto.",
       whatsappData: whatsappData || null,
       confirmacionUsuario: resultadoUsuario.success,
-      correoInterno: resultadoInterno.success
+      correoInterno: resultadoInterno.success,
+      telegram: resultadoTelegram.success,
     });
-
   } catch (error) {
     console.error("❌ Error en el proceso completo:", error);
 
@@ -123,5 +152,5 @@ const informarRequerimientoInformacion = async (req, res) => {
 
 module.exports = {
   informarRequerimientoInformacion,
-  formatearNumeroWhatsApp
+  formatearNumeroWhatsApp,
 };
